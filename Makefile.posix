@@ -1,0 +1,109 @@
+#  The MIT License (MIT)
+# 
+#  Copyright (c) 2018 Madis Kaal <mast@nomad.ee>
+# 
+#  Permission is hereby granted, free of charge, to any person obtaining a copy
+#  of this software and associated documentation files (the "Software"), to deal
+#  in the Software without restriction, including without limitation the rights
+#  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#  copies of the Software, and to permit persons to whom the Software is
+#  furnished to do so, subject to the following conditions:
+# 
+#  The above copyright notice and this permission notice shall be included in all
+#  copies or substantial portions of the Software.
+# 
+#  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#  SOFTWARE.
+
+
+
+# project name, resulting binaries will get that name
+PROJECT=z-two
+
+# object files going into project
+OBJECTS=posixconsole.o posixaux.o posixmain.o z80.o z80_tables.o posixmachine.o images.o partitioner.o
+IMAGES=bootstrap.ccc monitor.ccc cpm.ccc bootstrap.bin monitor.bin cpm.bin
+UTILS=ymodem.com ymodem.hex
+
+# additional include directories
+INCLUDEDIRS=-I..
+
+# additional libraries to link in
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+LIBRARIES=-lpthread
+else
+LIBRARIES=-lrt
+endif
+
+vpath %.cpp ..
+
+#--------------------------------------------------------------
+CC=gcc
+CXX=g++
+OBJCOPY=objcopy
+OBJDUMP=objdump
+SIZE=size
+REMOVE=rm -f
+LD=g++
+Z80ASSEMBLER=pyz80
+
+#generic compiler options
+CFLAGS=-I. $(INCLUDEDIRS) -g -Os -fpack-struct -fshort-enums -funsigned-char -Wall 
+
+CXXFLAGS=$(CFLAGS) -fno-exceptions -std=c++11
+
+LDFLAGS=$(LIBRARIES)
+
+.PHONY: erase clean
+
+#------------------------------------------------------------
+
+all: clean $(IMAGES) $(UTILS) hex
+	egrep "MONITORTOP|MONITORSTART|CPMTOP|CCPSTART|BDOSSTART|BIOSSTART" *.asm.map
+
+hex: $(PROJECT).hex
+
+$(PROJECT).elf: $(OBJECTS)
+	$(LD) $(LDFLAGS) -o $@ $?
+	@$(SIZE) $(PROJECT).elf
+	@$(OBJDUMP) -S $@ > $(PROJECT).lst
+
+$(PROJECT).hex: $(PROJECT).elf
+	mv $(PROJECT).elf zemu
+
+$(PROJECT).eep: $(PROJECT).elf
+	@-$(OBJCOPY) -j .eeprom --change-section-lma .eeprom=0 -O ihex $< $@
+
+flash: all $(PROJECT).hex $(PROJECT).eep
+	$(AVRDUDE) -F -P usb -B 3 -c usbtiny -p $(DEVICE) $(FUSES) -U flash:w:$(PROJECT).hex -U eeprom:w:$(PROJECT).eep
+
+erase:
+	$(AVRDUDE) -P usb -c usbtiny -p $(DEVICE) -e
+
+clean:
+	@rm -f $(PROJECT).hex $(PROJECT).eep $(PROJECT).elf *.o *~ *.lst *.map *.bin *.ccc *.HEX ymodem.COM *.pyc ymodem.HEX zemu
+
+%.hex : %.com
+	srec_cat -Output $@  -Intel -address-length=2 $< -Binary -Offset=256
+
+%.o : %.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDEDIRS) -c $< -o $@
+
+%.bin : %.asm
+	$(Z80ASSEMBLER) --lstfile $<.lst --mapfile $<.map --obj $@ $<
+
+%.com : %.asm
+	$(Z80ASSEMBLER) --lstfile $<.lst --mapfile $<.map --obj $@ $<
+
+%.ccc : %.bin
+	ls -l $<
+	python bin2inc.py $< >$@
+
+%.o : %.c
+	$(CC) $(CFLAGS) $(INCLUDEDIRS) -c $< -o $@

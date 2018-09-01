@@ -1,0 +1,284 @@
+/* The MIT License (MIT)
+ 
+  Copyright (c) 2018 Madis Kaal <mast@nomad.ee>
+ 
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+ 
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+ 
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+*/
+#include "z80_flags.h"
+
+const uint8_t z80_logicflags[256] = 
+{
+  0|ZFLAG|PVFLAG, //0
+  0, //1
+  0, //2
+  0|PVFLAG, //3
+  0, //4
+  0|PVFLAG, //5
+  0|PVFLAG, //6
+  0, //7
+  0, //8
+  0|PVFLAG, //9
+  0|PVFLAG, //10
+  0, //11
+  0|PVFLAG, //12
+  0, //13
+  0, //14
+  0|PVFLAG, //15
+  0, //16
+  0|PVFLAG, //17
+  0|PVFLAG, //18
+  0, //19
+  0|PVFLAG, //20
+  0, //21
+  0, //22
+  0|PVFLAG, //23
+  0|PVFLAG, //24
+  0, //25
+  0, //26
+  0|PVFLAG, //27
+  0, //28
+  0|PVFLAG, //29
+  0|PVFLAG, //30
+  0, //31
+  0, //32
+  0|PVFLAG, //33
+  0|PVFLAG, //34
+  0, //35
+  0|PVFLAG, //36
+  0, //37
+  0, //38
+  0|PVFLAG, //39
+  0|PVFLAG, //40
+  0, //41
+  0, //42
+  0|PVFLAG, //43
+  0, //44
+  0|PVFLAG, //45
+  0|PVFLAG, //46
+  0, //47
+  0|PVFLAG, //48
+  0, //49
+  0, //50
+  0|PVFLAG, //51
+  0, //52
+  0|PVFLAG, //53
+  0|PVFLAG, //54
+  0, //55
+  0, //56
+  0|PVFLAG, //57
+  0|PVFLAG, //58
+  0, //59
+  0|PVFLAG, //60
+  0, //61
+  0, //62
+  0|PVFLAG, //63
+  0, //64
+  0|PVFLAG, //65
+  0|PVFLAG, //66
+  0, //67
+  0|PVFLAG, //68
+  0, //69
+  0, //70
+  0|PVFLAG, //71
+  0|PVFLAG, //72
+  0, //73
+  0, //74
+  0|PVFLAG, //75
+  0, //76
+  0|PVFLAG, //77
+  0|PVFLAG, //78
+  0, //79
+  0|PVFLAG, //80
+  0, //81
+  0, //82
+  0|PVFLAG, //83
+  0, //84
+  0|PVFLAG, //85
+  0|PVFLAG, //86
+  0, //87
+  0, //88
+  0|PVFLAG, //89
+  0|PVFLAG, //90
+  0, //91
+  0|PVFLAG, //92
+  0, //93
+  0, //94
+  0|PVFLAG, //95
+  0|PVFLAG, //96
+  0, //97
+  0, //98
+  0|PVFLAG, //99
+  0, //100
+  0|PVFLAG, //101
+  0|PVFLAG, //102
+  0, //103
+  0, //104
+  0|PVFLAG, //105
+  0|PVFLAG, //106
+  0, //107
+  0|PVFLAG, //108
+  0, //109
+  0, //110
+  0|PVFLAG, //111
+  0, //112
+  0|PVFLAG, //113
+  0|PVFLAG, //114
+  0, //115
+  0|PVFLAG, //116
+  0, //117
+  0, //118
+  0|PVFLAG, //119
+  0|PVFLAG, //120
+  0, //121
+  0, //122
+  0|PVFLAG, //123
+  0, //124
+  0|PVFLAG, //125
+  0|PVFLAG, //126
+  0, //127
+  0|SFLAG, //128
+  0|SFLAG|PVFLAG, //129
+  0|SFLAG|PVFLAG, //130
+  0|SFLAG, //131
+  0|SFLAG|PVFLAG, //132
+  0|SFLAG, //133
+  0|SFLAG, //134
+  0|SFLAG|PVFLAG, //135
+  0|SFLAG|PVFLAG, //136
+  0|SFLAG, //137
+  0|SFLAG, //138
+  0|SFLAG|PVFLAG, //139
+  0|SFLAG, //140
+  0|SFLAG|PVFLAG, //141
+  0|SFLAG|PVFLAG, //142
+  0|SFLAG, //143
+  0|SFLAG|PVFLAG, //144
+  0|SFLAG, //145
+  0|SFLAG, //146
+  0|SFLAG|PVFLAG, //147
+  0|SFLAG, //148
+  0|SFLAG|PVFLAG, //149
+  0|SFLAG|PVFLAG, //150
+  0|SFLAG, //151
+  0|SFLAG, //152
+  0|SFLAG|PVFLAG, //153
+  0|SFLAG|PVFLAG, //154
+  0|SFLAG, //155
+  0|SFLAG|PVFLAG, //156
+  0|SFLAG, //157
+  0|SFLAG, //158
+  0|SFLAG|PVFLAG, //159
+  0|SFLAG|PVFLAG, //160
+  0|SFLAG, //161
+  0|SFLAG, //162
+  0|SFLAG|PVFLAG, //163
+  0|SFLAG, //164
+  0|SFLAG|PVFLAG, //165
+  0|SFLAG|PVFLAG, //166
+  0|SFLAG, //167
+  0|SFLAG, //168
+  0|SFLAG|PVFLAG, //169
+  0|SFLAG|PVFLAG, //170
+  0|SFLAG, //171
+  0|SFLAG|PVFLAG, //172
+  0|SFLAG, //173
+  0|SFLAG, //174
+  0|SFLAG|PVFLAG, //175
+  0|SFLAG, //176
+  0|SFLAG|PVFLAG, //177
+  0|SFLAG|PVFLAG, //178
+  0|SFLAG, //179
+  0|SFLAG|PVFLAG, //180
+  0|SFLAG, //181
+  0|SFLAG, //182
+  0|SFLAG|PVFLAG, //183
+  0|SFLAG|PVFLAG, //184
+  0|SFLAG, //185
+  0|SFLAG, //186
+  0|SFLAG|PVFLAG, //187
+  0|SFLAG, //188
+  0|SFLAG|PVFLAG, //189
+  0|SFLAG|PVFLAG, //190
+  0|SFLAG, //191
+  0|SFLAG|PVFLAG, //192
+  0|SFLAG, //193
+  0|SFLAG, //194
+  0|SFLAG|PVFLAG, //195
+  0|SFLAG, //196
+  0|SFLAG|PVFLAG, //197
+  0|SFLAG|PVFLAG, //198
+  0|SFLAG, //199
+  0|SFLAG, //200
+  0|SFLAG|PVFLAG, //201
+  0|SFLAG|PVFLAG, //202
+  0|SFLAG, //203
+  0|SFLAG|PVFLAG, //204
+  0|SFLAG, //205
+  0|SFLAG, //206
+  0|SFLAG|PVFLAG, //207
+  0|SFLAG, //208
+  0|SFLAG|PVFLAG, //209
+  0|SFLAG|PVFLAG, //210
+  0|SFLAG, //211
+  0|SFLAG|PVFLAG, //212
+  0|SFLAG, //213
+  0|SFLAG, //214
+  0|SFLAG|PVFLAG, //215
+  0|SFLAG|PVFLAG, //216
+  0|SFLAG, //217
+  0|SFLAG, //218
+  0|SFLAG|PVFLAG, //219
+  0|SFLAG, //220
+  0|SFLAG|PVFLAG, //221
+  0|SFLAG|PVFLAG, //222
+  0|SFLAG, //223
+  0|SFLAG, //224
+  0|SFLAG|PVFLAG, //225
+  0|SFLAG|PVFLAG, //226
+  0|SFLAG, //227
+  0|SFLAG|PVFLAG, //228
+  0|SFLAG, //229
+  0|SFLAG, //230
+  0|SFLAG|PVFLAG, //231
+  0|SFLAG|PVFLAG, //232
+  0|SFLAG, //233
+  0|SFLAG, //234
+  0|SFLAG|PVFLAG, //235
+  0|SFLAG, //236
+  0|SFLAG|PVFLAG, //237
+  0|SFLAG|PVFLAG, //238
+  0|SFLAG, //239
+  0|SFLAG|PVFLAG, //240
+  0|SFLAG, //241
+  0|SFLAG, //242
+  0|SFLAG|PVFLAG, //243
+  0|SFLAG, //244
+  0|SFLAG|PVFLAG, //245
+  0|SFLAG|PVFLAG, //246
+  0|SFLAG, //247
+  0|SFLAG, //248
+  0|SFLAG|PVFLAG, //249
+  0|SFLAG|PVFLAG, //250
+  0|SFLAG, //251
+  0|SFLAG|PVFLAG, //252
+  0|SFLAG, //253
+  0|SFLAG, //254
+  0|SFLAG|PVFLAG, //255
+};
+
